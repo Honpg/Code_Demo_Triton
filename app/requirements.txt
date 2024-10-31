@@ -1,0 +1,7 @@
+fastapi[full]
+uvicorn
+requests
+python-multipart
+tritonclient[http]
+httpx
+jinja2
