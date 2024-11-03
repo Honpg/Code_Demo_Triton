@@ -5,3 +5,5 @@ python-multipart
 tritonclient[http]
 httpx
 jinja2
+numpy
+Pillow

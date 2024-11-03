@@ -1,15 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Image</title>
+    <title>Image Upload</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .upload-section, .output-section {
+            border: 1px dashed #ccc;
+            border-radius: 10px;
+            width: 45%;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .upload-section input[type="file"] {
+            display: none;
+        }
+        .upload-section label {
+            display: block;
+            margin: 20px auto;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 2px solid #aaa;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .clear-btn {
+            background-color: #ddd;
+        }
+        .submit-btn {
+            background-color: #f90;
+            color: white;
+        }
+        .output-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload an Image for Detection</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required>
-        <button type="submit">Upload</button>
-    </form>
+    <div class="container">
+        <div class="upload-section">
+            <!-- Ensure the form action is set to /predict -->
+            <form action="/predict" method="post" enctype="multipart/form-data">
+                <label for="input_image">Drop Image Here<br>- or -<br>Click to Upload</label>
+                <input type="file" id="input_image" name="image">
+                <div class="buttons">
+                    <button type="reset" class="clear-btn">Clear</button>
+                    <button type="submit" class="submit-btn">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="output-section">
+            <div id="output">Output will appear here</div>
+        </div>
+    </div>
 </body>
 </html>
