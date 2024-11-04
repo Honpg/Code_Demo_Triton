@@ -10,11 +10,11 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 # URL of the Triton Inference Server
-TRITON_SERVER_URL = "http://triton:8000/v2/model_repository/resnet50"
+TRITON_SERVER_URL = "http://triton:8000/v2/model_repository/resnet18"
 
 @app.get("/", response_class=HTMLResponse)
 async def read_form(request: Request):
-    return templates.TemplateResponse("D:/Code_OJT/app/templates/form.html", {"request": request})
+    return templates.TemplateResponse("form.html", {"request": request})
 
 def preprocess_image(image):
     """Preprocesses the input image to prepare it for Triton inference."""
@@ -63,7 +63,7 @@ async def predict_image(image: UploadFile = File(...)):
         top5_indices = probabilities.argsort()[-5:][::-1]  # Get top 5 indices
 
         # Load class labels from the ImageNet class file
-        with open("D:/Code_OJT/model_repository/resnet50/1/imagenet_classes.txt", "r") as f:
+        with open("D:/Code_OJT/model_repository/resnet18/1/imagenet_classes.txt", "r") as f:
             categories = [s.strip() for s in f.readlines()]
 
         # Create a dictionary of the top 5 predictions
