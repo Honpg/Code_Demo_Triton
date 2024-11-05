@@ -61,7 +61,7 @@ async def predict_image(image: UploadFile = File(...)):
         probabilities = np.exp(probabilities) / np.sum(np.exp(probabilities))
         top5_indices = probabilities.argsort()[-5:][::-1]
 
-        with open("model_repository/resnet18/1/imagenet_classes.txt", "r") as f:
+        with open("templates/imagenet_classes.txt", "r") as f:
             categories = [s.strip() for s in f.readlines()]
 
         predictions = {categories[i]: float(probabilities[i]) for i in top5_indices}
