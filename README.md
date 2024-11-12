@@ -2,12 +2,11 @@
 
 ![Demo Screenshot](Demo.png)
 
+---
 ## Overview
-
 Welcome to the **Code_Demo_Triton** repository! This project demonstrates how to deploy a **FastAPI** application integrated with **NVIDIA Triton Inference Server** for scalable and efficient AI/ML model serving, all within a Dockerized environment.
 
 ---
-
 ## Features
 
 - **FastAPI for API Development**: A high-performance Python web framework ideal for building RESTful APIs.
@@ -31,7 +30,6 @@ Code_Demo_Triton/
 
 ```
 ---
-
 ## Prerequisites
 Before starting, ensure you have the following installed:
 
@@ -41,7 +39,6 @@ Before starting, ensure you have the following installed:
 - **NVIDIA Container** Toolkit (for GPU support in Docker)
 
 ---
-
 ## Quick Start Guide
 
 ### Step 1: Clone the Repository
@@ -61,17 +58,17 @@ docker-compose up -d
 ```
 
 ---
-
 ## Access the Application
 ### **FastAPI**
 - **API Base URL**: http://localhost:7000
 
 ### **Triton Inference Server**
-- **HTTP Endpoint**: http://localhost:8001/v2/models/<model_name>/infer
-- **Metrics Endpoint**:: http://localhost:8003/metrics
+- **Port Mapping:**
+- **8000**: HTTP endpoint for client requests.
+- **8001**: gRPC endpoint for client requests.
+- **8002**: Metrics endpoint for monitoring.
 
 ---
-
 ## Contributing
 Contributions are welcome! Fork the repository, make improvements, and submit a pull request. For major changes, open an issue to discuss your ideas first.
 
