@@ -1,29 +1,85 @@
 # Image Classification Demo - Triton Inference Server
 
-![Demo Screenshot](image.png)
-
-## Giới thiệu
-
-Dự án này cung cấp một **Demo Phân loại hình ảnh** sử dụng **Triton Inference Server**. Ứng dụng bao gồm giao diện đơn giản, nơi người dùng có thể tải lên hình ảnh và nhận được dự đoán phân loại kèm theo độ chính xác.
+![Demo Screenshot](Demo.png)
 
 ---
-
-## Tính năng
-
-- **Tải hình ảnh**: Cho phép người dùng kéo/thả hoặc chọn hình ảnh từ máy tính.
-- **Dự đoán thời gian thực**: Hiển thị kết quả ngay lập tức sau khi tải hình ảnh.
-- **Giao diện tương tác**: Giao diện trực quan, thân thiện với người dùng.
-- **Tích hợp Triton**: Ứng dụng sử dụng Triton Inference Server để xử lý dự đoán nhanh chóng.
+## Overview
+Welcome to the **Code_Demo_Triton** repository! This project demonstrates how to deploy a **FastAPI** application integrated with **NVIDIA Triton Inference Server** for scalable and efficient AI/ML model serving, all within a Dockerized environment.
 
 ---
+## Features
 
-## Yêu cầu
+- **FastAPI for API Development**: A high-performance Python web framework ideal for building RESTful APIs.
+- **NVIDIA Triton Integration** : Enable seamless serving of AI/ML models for inference tasks.
+- **Dockerized Deployment**: Simplifies the deployment process by containerizing both FastAPI and Triton.
+- **Scalability and Modularity** : Flexible architecture using Docker Compose for multi-container orchestration.
+---
+## Repository Structure
 
-### Môi trường
-- **Python 3.8+**
-- **Triton Inference Server** (để xử lý mô hình)
-
-### Thư viện Python
-Cài đặt các thư viện cần thiết:
 ```bash
-pip install -r requirements.txt
+Code_Demo_Triton/
+├── app/
+│   ├── main.py          # FastAPI application entry point
+│   ├── requirements.txt # Python dependencies
+│   └── ...
+├── models/              # Pre-trained models for Triton
+│   └── example_model/   # Sample model directory for Triton
+├── Dockerfile           # Docker build instructions for FastAPI
+├── docker-compose.yml   # Multi-container orchestration
+└── README.md            # Project documentation
+
+```
+---
+## Prerequisites
+Before starting, ensure you have the following installed:
+
+- **Docker** (v20.x or newer)
+- **Docker Compose** (v1.29+)
+- **NVIDIA GPU Driver** (optional, for GPU-accelerated inference with Triton)
+- **NVIDIA Container** Toolkit (for GPU support in Docker)
+
+---
+## Quick Start Guide
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/Honpg/Code_Demo_Triton.git
+cd Code_Demo_Triton
+```
+
+### Step 2: Prepare the Environment
+**1.** Place your pre-trained models in the models/ directory. Ensure the directory follows Triton's model repository structure.
+**2.** Modify main.py in the app/ directory to interact with Triton's gRPC or HTTP endpoint for inference.
+
+### Step 3: Build and Deploy with Docker Compose
+Use Docker Compose to deploy both FastAPI and Triton as separate containers:
+```bash
+docker-compose up -d
+```
+
+---
+## Access the Application
+### **FastAPI**
+- **API Base URL**: http://localhost:7000
+
+### **Triton Inference Server**
+- **Port Mapping:**
+- **8000**: HTTP endpoint for client requests.
+- **8001**: gRPC endpoint for client requests.
+- **8002**: Metrics endpoint for monitoring.
+
+---
+## Contributing
+Contributions are welcome! Fork the repository, make improvements, and submit a pull request. For major changes, open an issue to discuss your ideas first.
+
+---
+## License
+This project is licensed under the MIT License. See the LICENSE file for more details.
+
+---
+## Contact
+For questions, suggestions, or support, feel free to reach out through GitHub Issues.
+
+🚀 Happy Deploying!
+
+---
