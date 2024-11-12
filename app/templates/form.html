@@ -1,83 +1,237 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Image Upload and Preview</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Prediction</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
         .container {
+            max-width: 1200px;
+            margin: 50px auto;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 20px;
+            gap: 20px;
             padding: 20px;
         }
-        .upload-section, .output-section {
+
+        .section {
+            flex: 1;
             border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 45%;
-            padding: 10px;
-            background-color: #f9f9f9;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .upload-section label {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            height: 250px;
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
+
+        .upload-section label:hover {
+            background-color: #f0f8ff;
+            border-color: #0078d7;
+        }
+
         #image-preview {
             max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            max-height: 100%;
+            border-radius: 10px;
+            display: none;
         }
+
         .buttons {
+            margin-top: 15px;
             display: flex;
+            justify-content: center;
             gap: 10px;
         }
+
         .buttons button {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
         }
+
         .clear-btn {
-            background-color: #ddd;
-            color: #333;
-        }
-        .submit-btn {
-            background-color: #f90;
+            background-color: #f44336;
             color: white;
+        }
+
+        .clear-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .submit-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #388e3c;
+        }
+
+        .output-section {
+            text-align: center;
+        }
+
+        .prediction-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .prediction-container h2 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .prediction-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .prediction-item span {
+            flex-basis: 25%;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 20px;
+            border-radius: 5px;
+            background-color: #ddd;
+            position: relative;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #2196f3;
+            text-align: right;
+            padding-right: 5px;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="upload-section">
-            <form action="/predict" method="post" enctype="multipart/form-data">
-                <input type="file" id="input_image" name="image" style="display: none;" onchange="previewImage()">
-                <label for="input_image" style="cursor: pointer;">
-                    <img id="image-preview" src="#" alt="Image Preview" style="display: none;">
-                    <p>Click to Upload Image</p>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="font-size: 2.5em; color: #333;">Images Classification Demo</h1>
+    </div>
+
+    <div class="container"> 
+        <div class="section upload-section">
+            <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data" onsubmit="submitForm(event)">
+                <label for="input_image">
+                    <img id="image-preview" src="{{ image_base64 }}" alt="Image Preview" style="display: {{ 'block' if image_base64 else 'none' }};">
+                    <p id="upload-text" style="display: {{ 'none' if image_base64 else 'block' }};">Click or drag to upload an image</p>
                 </label>
+                <input type="file" id="input_image" name="image" style="display: none;" onchange="previewImage()">
                 <div class="buttons">
                     <button type="button" class="clear-btn" onclick="clearImage()">Clear</button>
                     <button type="submit" class="submit-btn">Submit</button>
                 </div>
             </form>
         </div>
-        <div class="output-section">
-            <div id="output">Output will appear here</div>
+
+        <div class="section output-section">
+            <div id="output">
+                {% if predictions %}
+                <div class="prediction-container">
+                    <h2>Prediction Results</h2>
+                    {% for prediction in predictions %}
+                    <div class="prediction-item">
+                        <span>{{ prediction['class'] }}</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: {{ prediction['probability'] }}%;">
+                                {{ prediction['probability']|round(1) }}%
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: #777;">Prediction results will appear here.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 
+    <footer>
+        © 2024 Image Classifier Application Demo For Hon Pg. All rights reserved.
+    </footer>
+
     <script>
+        let uploadedImageBase64 = null;
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const form = document.getElementById('upload-form');
+            const formData = new FormData(form);
+
+            if (uploadedImageBase64) {
+                formData.append("image_base64", uploadedImageBase64);
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to submit form");
+                }
+
+                const html = await response.text();
+                document.body.innerHTML = html;
+            } catch (error) {
+                console.error("Submission failed", error);
+            }
+        }
+
         function previewImage() {
             const input = document.getElementById('input_image');
             const preview = document.getElementById('image-preview');
+            const uploadText = document.getElementById('upload-text');
             const file = input.files[0];
 
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
+                    uploadedImageBase64 = e.target.result;
                     preview.src = e.target.result;
                     preview.style.display = "block";
+                    uploadText.style.display = "none";
                 };
                 reader.readAsDataURL(file);
             }
@@ -86,10 +240,13 @@
         function clearImage() {
             const input = document.getElementById('input_image');
             const preview = document.getElementById('image-preview');
-            input.value = "";  
-            preview.style.display = "none";  
-            preview.src = "#";  
-            document.getElementById('output').innerText = "Output will appear here"; // Reset the output
+            const uploadText = document.getElementById('upload-text');
+            input.value = "";
+            uploadedImageBase64 = null; 
+            preview.style.display = "none";
+            uploadText.style.display = "block";
+            preview.src = "#";
+            document.getElementById('output').innerHTML = '<p style="color: #777;">Prediction results will appear here.</p>';
         }
     </script>
 </body>

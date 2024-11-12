@@ -2,18 +2,22 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "7000:7000"
     volumes:
       - ./app:/app
     depends_on:
       - triton-server
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    command: uvicorn main:app --host 0.0.0.0 --port 7000
 
   triton-server:
     image: nvcr.io/nvidia/tritonserver:23.03-py3
     ports:
+      - "8000:8000"
       - "8001:8001"
       - "8002:8002"
     volumes:
       - ./model_repository:/models
-    command: tritonserver --model-repository=/models
+    environment:
+      - CUDA_VISIBLE_DEVICES=-1
+      - FORCE_CPU=1
+    command: tritonserver --model-repository=/models --backend-config=pytorch,execution_accelerator=cpu
