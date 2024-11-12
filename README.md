@@ -1,6 +1,6 @@
 # Image Classification Demo - Triton Inference Server
 
-![Demo Screenshot](image.png)
+![Demo Screenshot](Demo.png)
 
 ## Giới thiệu
 
