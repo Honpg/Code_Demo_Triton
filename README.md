@@ -56,7 +56,20 @@ Use Docker Compose to deploy both FastAPI and Triton as separate containers:
 ```bash
 docker-compose up -d
 ```
+### Other Setup
+```bash
+docker build -t fastapi .
+docker run -p 8000:8000 fastapi
+docker run -d --gpus "device=0" --rm -p8000:8000 -p8001:8001 -p8002:8002 -v "D:/Code_OJT/model_repository:/models" nvcr.io/nvidia/tritonserver:23.03-py3 tritonserver --model-repository=/models
 
+docker exec -it 6200058225e2 /bin/bash
+
+curl http://triton-server:8001/v2/health/ready
+docker run --gpus "device=0" --rm -p8000:8000 -p8001:8001 -p8002:8002 -v "D:/Code_OJT/model_repository:/models" nvcr.io/nvidia/tritonserver:23.03-py3 tritonserver --model-repository=/models
+docker run --rm -p8000:8000 -p8001:8001 -p8002:8002 -v "D:/Code_OJT/model_repository:/models" nvcr.io/nvidia/tritonserver:23.03-py3 tritonserver --model-repository=/models
+
+perf_analyzer -m <model name> -b <batch size> --shape <input layer>:<input shape> --concurrency-range <lower number of request>:<higher number of request>:<step>
+```
 ---
 ## Access the Application
 ### **FastAPI**
